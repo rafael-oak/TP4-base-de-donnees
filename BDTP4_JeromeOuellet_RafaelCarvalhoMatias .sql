@@ -31,3 +31,13 @@ FROM produit
 GROUP BY pro_code
 ORDER BY pro_code;
 
+SELECT 
+	pro_code as "Code produit",
+    COUNT(pro_nom) as "nombre",
+    format(AVG(pro_prix),2) as "Moyenne"
+    FROM produit
+    Group by pro_code
+    Having COUNT(pro_nom) > 2
+    Order by pro_code;
+
+
