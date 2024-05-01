@@ -19,7 +19,8 @@ VALUES
     (1003, 'CRA', 'Crayon Noir', 2000, 1.25),
     (1004, 'BOI', 'Boite 2B', 10000, 0.48),
     (1005, 'BOI', 'Boite 2H', 8000, 0.49);
-    
+  
+  -- EX 4
 SELECT 
     pro_code,
     MAX(pro_prix) AS prix_max,
@@ -31,6 +32,7 @@ FROM produit
 GROUP BY pro_code
 ORDER BY pro_code;
 
+-- EX 5
 SELECT 
 	pro_code as "Code produit",
     COUNT(pro_nom) as "nombre",
@@ -39,5 +41,30 @@ SELECT
     Group by pro_code
     Having COUNT(pro_nom) > 2
     Order by pro_code;
+    
+-- EX 6
+SET AUTOCOMMIT = 0;
+SET SQL_SAFE_UPDATES = 0; 
+UPDATE produit
+SET pro_qte = pro_qte + 50, 
+	pro_prix = pro_prix + 1.23 
+    WHERE pro_nom = "Crayon Rouge";
+COMMIT;
+
+select * from produit;
+ 
+-- EX 7
+Set autocommit = 0;
+Delete From produit
+where pro_nom like "Crayon%";
+select * from produit;	
+
+ROLLBACK;
+select * from produit;	
+
+
+
+
+
 
 
