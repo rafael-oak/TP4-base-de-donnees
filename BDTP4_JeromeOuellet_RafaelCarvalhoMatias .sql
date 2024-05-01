@@ -3,11 +3,11 @@ CREATE DATABASE BDTP4JeromeRafael;
 USE BDTP4JeromeRafael;
 
 CREATE TABLE produit (
-    pro_id INT PRIMARY KEY,
-    pro_code CHAR(3),
-    pro_nom VARCHAR(30),
-    pro_qte INT,
-    pro_prix DECIMAL(10,2)
+    pro_id INT PRIMARY KEY NOT NULL,
+    pro_code CHAR(3) NULL,
+    pro_nom VARCHAR(30) NULL,
+    pro_qte INT NULL,
+    pro_prix DECIMAL(10,2) NULL
 );
 
 SELECT * FROM produit;
@@ -61,6 +61,31 @@ select * from produit;
 
 ROLLBACK;
 select * from produit;	
+-- EX 8
+CREATE TABLE fournisseur (
+	fou_id INT primary key NOT NULL,
+    fou_nom varchar(30) NULL,
+    fou_tel CHAR(10) NULL
+);
+-- EX 9
+insert INTO fournisseur (fou_id, fou_nom, fou_tel) VALUES
+(501, "ABC Vente", 4181112222),
+(502, "XYZ Compagnie", 5143334444),
+(503, "QQ Coop", 6131118888),
+(504, "QU Quebec", 4185557777);
+
+
+-- EX 10
+ALTER TABLE produit ADD COLUMN pro_fou_id INT, ADD CONSTRAINT fk_pro_fou_id foreign key (pro_fou_id) REFERENCES fournisseur (fou_id);
+SELECT * FROM produit;
+update produit set pro_fou_id = 501;
+
+
+
+
+
+
+
 
 
 
