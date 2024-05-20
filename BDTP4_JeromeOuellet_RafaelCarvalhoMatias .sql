@@ -77,19 +77,99 @@ insert INTO fournisseur (fou_id, fou_nom, fou_tel) VALUES
 
 -- EX 10
 ALTER TABLE produit ADD COLUMN pro_fou_id INT, ADD CONSTRAINT fk_pro_fou_id foreign key (pro_fou_id) REFERENCES fournisseur (fou_id);
-SELECT * FROM produit;
 update produit set pro_fou_id = 501;
+update produit set pro_fou_id = 502 where pro_id = 1004;
+
+select pro_nom as "Nom des produits", 
+pro_prix as "Prix produits", 
+fou_nom as "Nom des fournisseur"
+from produit 
+inner join fournisseur on pro_fou_id = fou_id
+where pro_prix < 1;
+
+select pro_nom as "Nom des produits", 
+pro_prix as "Prix produits", 
+fou_nom as "Nom des fournisseur"
+from produit, fournisseur
+where pro_fou_id = fou_id
+and pro_prix < 1;
+
+
+select * from produit;
+
+INSERT INTO fournisseur (fou_id, fou_nom, fou_tel) VALUES (506, 'Naji (best prof ever)', '123456789');
+
+INSERT INTO produit (pro_id, pro_code, pro_nom, pro_qte, pro_prix, pro_fou_id)
+VALUES (1006, 'BOI', 'Boite 2C', 7000, 2.23, 506);
+
+alter table produit drop foreign key fk_pro_fou_id;
+alter table produit drop column pro_fou_id;
+
+delete from produit where pro_id = 1006;
+
+CREATE TABLE contact (
+    pro_id INT,
+    fou_id INT,
+    PRIMARY KEY (pro_id, fou_id),
+    FOREIGN KEY (pro_id) REFERENCES produit(pro_id),
+    FOREIGN KEY (fou_id) REFERENCES fournisseur(fou_id)
+);
+
+INSERT INTO contact (pro_id, fou_id)
+VALUES
+    (1001, 501),
+    (1002, 501),
+    (1003, 501),
+    (1004, 502),
+    (1001, 503);
+    
+
+select p.pro_nom as 'Nom Produit', p.pro_prix as 'Prix produit', f.fou_nom as 'Nom des fournisseurs'
+from produit p
+inner join contact c on p.pro_id = c.pro_id
+inner join fournisseur f on c.fou_id = f.fou_id
+where pro_prix > 1;
+
+select p.pro_nom as 'Nom Produit', p.pro_prix as 'Prix produit', f.fou_nom as 'Nom des fournisseurs'
+from produit p, contact c, fournisseur f
+where p.pro_id = c.pro_id and f.fou_id = c.fou_id and pro_prix > 1;
+
+
+select p.pro_code as 'Categorie produit', f.fou_nom as 'nom fournisseur', count(*) as nombre
+from produit p, fournisseur f, contact c
+where f.fou_id = c.fou_id and p.pro_id = c.pro_id
+group by p.pro_code, f.fou_nom
+order by p.pro_code, nombre desc;
 
 
 
+select p.pro_code as 'Categorie produit', f.fou_nom as 'nom fournisseur', count(*) as nombre
+from produit p, fournisseur f, contact c
+where f.fou_id = c.fou_id and p.pro_id = c.pro_id
+group by p.pro_code, f.fou_nom
+having count(*) > 2
+order by p.pro_code, nombre desc;
+
+select fou_nom
+from fournisseur
+where fou_id not in (select fou_id from contact);
+
+alter table produit add column pro_date_achat date;
+
+UPDATE produit
+SET pro_date_achat = '2024-02-25'
+WHERE pro_id IN (1001, 1002, 1003);
 
 
+UPDATE produit
+SET pro_date_achat = '2024-04-10'
+WHERE pro_id IN (1004, 1005);
 
 
+select * from produit
+where pro_date_achat between '2024-03-15' and (select curdate())
+order by pro_id desc;
 
-
-
-
-
-
-
+select pro_nom, pro_date_achat,DATEDIFF(CURDATE(), pro_date_achat) as 'nombre'
+from produit
+order by pro_date_achat desc;
